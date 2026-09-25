@@ -1,37 +1,63 @@
-# 🛒 E-Commerce End-to-End Data Pipeline
+# 🛒 E-Commerce Orders ETL & Temporal Analysis Pipeline
 
-![Python](https://img.shields.io/badge/Python-3.8%2B-blue?style=for-the-badge&logo=python)
-![Pandas](https://img.shields.io/badge/Pandas-Data%20Analysis-150458?style=for-the-badge&logo=pandas)
+![Python](https://img.shields.io/badge/Python-3.9%2B-blue?style=for-the-badge&logo=python)
+![Pandas](https://img.shields.io/badge/Pandas-Data%20Wrangling-150458?style=for-the-badge&logo=pandas)
+![SQLite](https://img.shields.io/badge/SQLite-Database-003B57?style=for-the-badge&logo=sqlite)
 ![ETL](https://img.shields.io/badge/Pipeline-ETL-orange?style=for-the-badge)
 ![Status](https://img.shields.io/badge/Status-Completed-success?style=for-the-badge)
 
+An end-to-end data engineering pipeline designed to ingest, clean, validate, transform, analyze, and persist large-scale e-commerce order records. The pipeline enforces strict data quality policies, derives temporal and geographic features, answers core business questions, and records full operational audit logs.
+
 ---
 
-## 👥 Team Members
+## 👥 Team Members & Credits
 * **Youssef Mahmoud ElToor** - *Data Engineer*
-* **Kareem Hany Nasser** - *Data Engineer*
+* **Karim Hany Nasr** - *Data Engineer*
+
+**Course:** Big Data Engineering with Python  
+**Project:** E-Commerce Orders ETL & Geographic/Temporal Analysis  
 
 ---
 
-## 📝 Project Overview
-This project delivers an automated **End-to-End Data Pipeline (ETL)** built with **Python** and **Pandas** to extract, clean, transform, and log sales and transaction data from an E-Commerce platform. 
+## ⚙️ Operational Architecture & Pipeline Flow
 
-The pipeline ensures data integrity, handles missing values, generates analytical metrics, and logs execution details into an automated system monitoring file (`logfile.txt`).
+The following flow diagram illustrates the robust, modular architecture (`Extract → Transform → Analyze → Load → Log`) implemented to process e-commerce orders:
 
----
-
-## ⚙️ Key Technical Features
-* **Data Extraction:** Automated ingestion of multi-source raw CSV datasets.
-* **Data Cleaning & Preprocessing:** Handling null values, data type casting, and duplicate removal.
-* **Feature Engineering:** Calculating key performance indicators (KPIs) such as customer lifetime sales, total revenue, and transactional metrics.
-* **Pipeline Logging System:** Custom logging execution script to track operational status and errors in real-time.
-
----
-
-## 📁 Repository Structure
 ```text
-├── Dataset/                   # Raw E-commerce source files
-├── output/                    # Transformed output datasets
-├── E - commerce Project Pipeline.ipynb   # Main Jupyter Notebook Pipeline
-├── logfile.txt                # Automated execution log
-└── README.md                  # Project documentation
+[ Raw Order Datasets ] 
+       │   (data/raw/orders.csv)
+       ▼
+┌────────────────────────────────────────────────────────┐
+│ 1. EXTRACT STAGE                                       │
+│    ├── File Validation & Ingestion (pandas)            │
+│    └── Exception Handling & Input Shape Logging        │
+└────────────────────────────────────────────────────────┘
+       │
+       ▼
+┌────────────────────────────────────────────────────────┐
+│ 2. TRANSFORM STAGE (Data Quality & Cleaning)           │
+│    ├── Text Standardizing: Customer, State, City       │
+│    ├── Deduplication: Order ID & Duplicate Row Removal │
+│    ├── Datetime Conversion: ISO Parsing & Error handling│
+│    ├── Feature Engineering: Year, Month, Weekday, Qtr  │
+│    └── Geographic Composite: order_location Creation   │
+└────────────────────────────────────────────────────────┘
+       │
+       ▼
+┌────────────────────────────────────────────────────────┐
+│ 3. ANALYZE STAGE (Descriptive Business Intelligence)   │
+│    ├── Geographic Breakdown: Orders by State & City    │
+│    ├── Temporal Trends: Peak Months, Days, Quarters    │
+│    └── Data Quality Audit Metrics                      │
+└────────────────────────────────────────────────────────┘
+       │
+       ▼
+┌────────────────────────────────────────────────────────┐
+│ 4. LOAD STAGE (Persistence & Storage)                  │
+│    ├── Output Clean CSV: data/output/cleaned_orders.csv│
+│    ├── Aggregated Summaries: data/output/summary_*.csv │
+│    └── Relational Storage: data/output/orders.db       │
+└────────────────────────────────────────────────────────┘
+       │
+       ▼
+[ Execution Monitoring Log: logfile.txt ]
